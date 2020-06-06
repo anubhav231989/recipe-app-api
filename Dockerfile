@@ -9,7 +9,9 @@ RUN apk update
 ENV PYTHONUNBUFFERED 1
 
 # INSTALL PYTHON DEPENDENCIES.
-
+RUN apk add --no-cache postgresql-client
+RUN apk add --no-cache --virtual .tmp-build-deps \
+    gcc libc-dev linux-headers postgresql-dev
 # CREATE APP DIRECTORY AND SET WORKDIR.
 RUN mkdir /application
 WORKDIR /application
@@ -19,6 +21,9 @@ WORKDIR /application
 # COPY DEPENDENCIES.TXT AND INSTALL ALL THE DEPENDENCIES.
 ADD dependencies.txt dependencies.txt 
 RUN pip install -r dependencies.txt
+
+# REMOVE TMP-BUILD-DEPS AFTER INSTALLLING REQUIRED PACKAGES.
+RUN apk del .tmp-build-deps
 
 # COPY SOURCE CODE TO THE APPLICATION DIRECTORY.
 ADD ./application /application

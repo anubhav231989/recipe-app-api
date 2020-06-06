@@ -8,3 +8,18 @@ services:
     volumes:
       - ./application:/application
     command: python manage.py runserver 0.0.0.0:9000
+    depends_on:
+      - db
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_NAME=app_db
+      - DATABASE_USER=app_db_user
+      - DATABASE_PASSWORD=abcd123
+
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=app_db
+      - POSTGRES_USER=app_db_user
+      - POSTGRES_PASSWORD=abcd123
+    
